@@ -35,4 +35,37 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   };
   
   window.addEventListener('load', animateOnScroll);
+
+  // Function to animate statistics counters
+const animateCounters = () => {
+  const counters = document.querySelectorAll('.stat-card h3');
+  const speed = 200; // Animation speed (lower = faster)
+
+  counters.forEach((counter) => {
+    const target = +counter.getAttribute('data-count'); // Get target number
+    const increment = target / speed; // Calculate increment value
+
+    const updateCount = () => {
+      const current = +counter.innerText.replace(/,/g, ''); // Remove commas
+      if (current < target) {
+        counter.innerText = Math.ceil(current + increment).toLocaleString(); // Add commas
+        setTimeout(updateCount, 1); // Continue animation
+      } else {
+        counter.innerText = target.toLocaleString(); // Set final value
+      }
+    };
+
+    updateCount(); // Start animation
+  });
+};
+
+const handleScroll = () => {
+  const statisticsSection = document.querySelector('.statistics');
+  if (isInViewport(statisticsSection)) {
+    animateCounters();
+    window.removeEventListener('scroll', handleScroll); // Stop listening after animation
+  }
+};
+
+window.addEventListener('scroll', handleScroll);
   
